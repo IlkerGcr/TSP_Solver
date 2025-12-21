@@ -23,7 +23,7 @@ OUT_PATH = OUT_DIR / "ground_truth.csv"
 
 def main() -> None:
     tiny_ns = [10, 12, 14]
-    inst_seeds = [1, 2, 3]
+    inst_seeds = [1, 2, 3]  
 
     rows = []
     for n in tiny_ns:

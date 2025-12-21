@@ -1,4 +1,3 @@
-# src/experiments/run_tiny_benchmark.py
 """
 Run SA and ACO on tiny instances (10/12/14) and compare to exact OPT (Held-Karp).
 
