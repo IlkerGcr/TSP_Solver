@@ -1,4 +1,3 @@
-# src/experiments/run_large_benchmark_parallel_v2.py
 from __future__ import annotations
 from pathlib import Path
 import sys
@@ -14,9 +13,7 @@ except ImportError:
     def tqdm(iterable, total=None, desc=None): 
         return iterable
 
-# ---------------------------------------------------------------------------
-# Path & Import Setup
-# ---------------------------------------------------------------------------
+
 THIS_DIR = Path(__file__).resolve().parent
 SRC_DIR = THIS_DIR.parent
 BASE_DIR = SRC_DIR.parent
@@ -28,9 +25,7 @@ from tsp.instance import TSPInstance
 from solvers.sa import SAConfig, sa_solve
 from solvers.aco import ACOConfig, aco_solve
 
-# ---------------------------------------------------------------------------
-# Configuration & Paths
-# ---------------------------------------------------------------------------
+
 INST_DIR = BASE_DIR / "data" / "instances"
 OUT_DIR = BASE_DIR / "data" / "results"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

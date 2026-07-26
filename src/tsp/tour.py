@@ -20,11 +20,12 @@ def tour_length(tour: Tour, instance: TSPInstance) -> float:
 """    
 Calculate the total length of a given tour for a TSP instance.
 
-    Args:
+    
         tour (Tour): A list of node indices representing the tour.
         instance (TSPInstance): The TSP instance containing the distance matrix.
-    Returns:
-        float: The total length of the tour.
+    
+    Returns:     float: The total length of the tour.
+        
 
     Complexity: O(n), where n is the number of nodes(hospital, city) in the TSP instance.
 """
