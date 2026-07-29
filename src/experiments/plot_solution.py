@@ -1,7 +1,10 @@
 """
 Solve a TSP instance and render a two-panel figure: the found tour drawn
 over the city map, and the best-cost-vs-iteration convergence curve.
-Used to generate the README's result images.
+Used to generate the README's static result images (see
+make_tour_animation.py for the animated GIF version).
+
+Palette: dataviz reference palette, light surface (ACO = blue, SA = orange).
 """
 from __future__ import annotations
 from pathlib import Path
@@ -24,6 +27,13 @@ from solvers.aco import ACOConfig, aco_solve
 
 PLOTS_DIR = BASE_DIR / "data" / "plots"
 
+SURFACE = "#fcfcfb"
+INK_PRIMARY = "#0b0b0b"
+INK_MUTED = "#898781"
+GRIDLINE = "#e1e0d9"
+SERIES = {"aco": "#2a78d6", "sa": "#eb6834"}
+LABELS = {"aco": "Ant Colony Optimization", "sa": "Simulated Annealing"}
+
 
 def solve(instance: TSPInstance, algo: str, seed: int):
     if algo == "sa":
@@ -38,7 +48,7 @@ def solve(instance: TSPInstance, algo: str, seed: int):
             seed=seed,
             use_step_budget_only=True,
         )
-        return sa_solve(instance, cfg), "Simulated Annealing"
+        return sa_solve(instance, cfg)
 
     if algo == "aco":
         cfg = ACOConfig(
@@ -53,41 +63,47 @@ def solve(instance: TSPInstance, algo: str, seed: int):
             log_interval=1,
             seed=seed,
         )
-        return aco_solve(instance, cfg), "Ant Colony Optimization"
+        return aco_solve(instance, cfg)
 
     raise ValueError(f"Unknown algorithm: {algo}")
 
 
-def plot_solution(instance: TSPInstance, result: dict, algo_label: str, title_prefix: str, out_path: Path):
+def plot_solution(instance: TSPInstance, result: dict, algo: str, title_prefix: str, out_path: Path):
     tour = result["best_tour"]
     cost = result["best_cost"]
     history = result["history"]
+    color = SERIES[algo]
 
-    fig, (ax_tour, ax_curve) = plt.subplots(1, 2, figsize=(13, 6))
+    fig, (ax_tour, ax_curve) = plt.subplots(1, 2, figsize=(13, 6), facecolor=SURFACE)
+    for ax in (ax_tour, ax_curve):
+        ax.set_facecolor(SURFACE)
+        for spine in ax.spines.values():
+            spine.set_color(GRIDLINE)
+        ax.tick_params(colors=INK_MUTED, labelsize=9)
+        ax.grid(True, color=GRIDLINE, linewidth=0.8, zorder=0)
 
     xs = [instance.coords[c][0] for c in tour] + [instance.coords[tour[0]][0]]
     ys = [instance.coords[c][1] for c in tour] + [instance.coords[tour[0]][1]]
-    ax_tour.plot(xs, ys, "-", color="steelblue", linewidth=1.2, zorder=1)
+    ax_tour.plot(xs, ys, "-", color=color, linewidth=2, zorder=2, solid_capstyle="round")
     ax_tour.scatter(
         [c[0] for c in instance.coords], [c[1] for c in instance.coords],
-        color="crimson", edgecolors="black", zorder=2, s=40,
+        color=INK_PRIMARY, edgecolors=SURFACE, linewidths=1.2, zorder=3, s=45,
     )
-    ax_tour.set_title(f"{title_prefix} — {algo_label}\ncost = {cost:.2f}  (n={instance.n})")
-    ax_tour.set_xlabel("x")
-    ax_tour.set_ylabel("y")
+    ax_tour.set_title(f"{title_prefix} — {LABELS[algo]}\ncost = {cost:.2f}  (n={instance.n})",
+                       fontsize=12, color=INK_PRIMARY)
+    ax_tour.set_xlabel("x", color=INK_MUTED, fontsize=10)
+    ax_tour.set_ylabel("y", color=INK_MUTED, fontsize=10)
     ax_tour.axis("equal")
-    ax_tour.grid(True, linestyle=":", alpha=0.5)
 
     steps, costs = zip(*history)
-    ax_curve.plot(steps, costs, color="darkorange")
-    ax_curve.set_title("Convergence")
-    ax_curve.set_xlabel("iteration / step")
-    ax_curve.set_ylabel("best cost so far")
-    ax_curve.grid(True, linestyle=":", alpha=0.5)
+    ax_curve.plot(steps, costs, color=color, linewidth=2)
+    ax_curve.set_title("Convergence", fontsize=12, color=INK_PRIMARY)
+    ax_curve.set_xlabel("iteration / step", color=INK_MUTED, fontsize=10)
+    ax_curve.set_ylabel("best cost so far", color=INK_MUTED, fontsize=10)
 
     fig.tight_layout()
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_path, dpi=110)
+    fig.savefig(out_path, dpi=110, facecolor=SURFACE)
     plt.close(fig)
     print(f"Saved: {out_path}")
 
@@ -105,11 +121,11 @@ def main():
 
     inst_path = Path(args.instance)
     instance = TSPInstance.load(str(inst_path))
-    result, algo_label = solve(instance, args.algo, args.seed)
+    result = solve(instance, args.algo, args.seed)
 
     label = args.label or inst_path.stem
     out_path = PLOTS_DIR / f"{inst_path.stem}_{args.algo}.png"
-    plot_solution(instance, result, algo_label, label, out_path)
+    plot_solution(instance, result, args.algo, label, out_path)
 
 
 if __name__ == "__main__":
