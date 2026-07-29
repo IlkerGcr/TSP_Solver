@@ -1,6 +1,7 @@
 # TSP Solver & Benchmark Suite
 
 [![CI](https://github.com/IlkerGcr/TSP_Solver/actions/workflows/ci.yml/badge.svg)](https://github.com/IlkerGcr/TSP_Solver/actions/workflows/ci.yml)
+[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tspsolver-gayumr5rmvih7tkzo5splg.streamlit.app/)
 
 A Python framework for solving the Traveling Salesman Problem (TSP) with
 multiple algorithms, validated against [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/)
@@ -102,6 +103,8 @@ pytest
 ```
 
 ## Live demo
+
+**[Try it live →](https://tspsolver-gayumr5rmvih7tkzo5splg.streamlit.app/)**
 
 An interactive Streamlit app lets you pick an instance, run SA or ACO, and
 replay how the solution converged.
