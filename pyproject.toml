@@ -12,7 +12,7 @@ readme = "README.md"
 [project.optional-dependencies]
 dev = ["pytest"]
 viz = ["matplotlib"]
-demo = ["streamlit", "matplotlib"]
+demo = ["streamlit", "matplotlib", "plotly"]
 
 [project.scripts]
 tsp = "cli:main"
