@@ -1,6 +1,6 @@
 # TSP Solver & Benchmark Suite
 
-[![CI](https://github.com/IlkerGcr/TSP_proje/actions/workflows/ci.yml/badge.svg)](https://github.com/IlkerGcr/TSP_proje/actions/workflows/ci.yml)
+[![CI](https://github.com/IlkerGcr/TSP_Solver/actions/workflows/ci.yml/badge.svg)](https://github.com/IlkerGcr/TSP_Solver/actions/workflows/ci.yml)
 
 A Python framework for solving the Traveling Salesman Problem (TSP) with
 multiple algorithms, validated against [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/)
