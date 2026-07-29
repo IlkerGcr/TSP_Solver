@@ -1,0 +1,8 @@
+{
+  "task_count": 18,
+  "cpu_cores": 32,
+  "wall_serial_sec": 34.919934000005014,
+  "wall_parallel_sec": 4.595437600000878,
+  "sum_compute_sec": 34.753883699988364,
+  "speedup_x": 7.598826714565408
+}
