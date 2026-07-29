@@ -16,7 +16,7 @@
             "steps": 50000
         },
         "aco": {
-            "beta": 2.0,
+            "beta": 3.0,
             "rho": 0.1,
             "ants": 10
         }
@@ -27,15 +27,15 @@
             "steps": 300000
         },
         "aco": {
-            "beta": 2.0,
+            "beta": 3.0,
             "rho": 0.1,
             "ants": 20
         }
     },
     "large": {
         "sa": {
-            "alpha": 0.995,
-            "steps": 2000000
+            "alpha": 0.999,
+            "steps": 1500000
         },
         "aco": {
             "beta": 5.0,
