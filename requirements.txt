@@ -1,0 +1,5 @@
+# Core solvers (src/tsp, src/solvers, src/experiments) use only the standard library.
+# These are needed for visualization, the CLI's optional plots, the demo app, and tests.
+matplotlib
+streamlit
+pytest

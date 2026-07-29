@@ -3,7 +3,6 @@
 
 from pathlib import Path
 import sys
-import random
 
 
 # Bu kısım proje dizinini sys.path'e ekler ki tsp.instance modülünü içe aktarabilelim
@@ -14,6 +13,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from tsp.instance import TSPInstance
+from utils.rng import make_rng
 
 BASE_DIR = SRC_DIR.parent
 DATA_DIR = BASE_DIR / "data" / "instances"
@@ -24,7 +24,7 @@ DATA_DIR = BASE_DIR / "data" / "instances"
 
 # Rastgele TSP örneği oluşturma fonksiyonu
 def make_random_instance(n: int, seed: int, box_size: float = 1000.0) -> TSPInstance:
-    rng = random.Random(seed)
+    rng = make_rng(seed)
     coords = [
         (rng.random() * box_size, rng.random() * box_size)
         for _ in range(n)

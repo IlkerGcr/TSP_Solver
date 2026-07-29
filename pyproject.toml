@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tsp-solver"
+version = "0.1.0"
+description = "TSP solver & benchmark suite: exact (Held-Karp/B&B), Simulated Annealing, and Ant Colony Optimization"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+viz = ["matplotlib"]
+demo = ["streamlit", "matplotlib"]
+
+[project.scripts]
+tsp = "cli:main"
+
+[tool.setuptools]
+py-modules = ["cli"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

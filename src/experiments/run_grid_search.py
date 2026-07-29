@@ -1,4 +1,4 @@
-# src/experiments/run_grid_search_v3.py
+# src/experiments/run_grid_search.py
 from __future__ import annotations
 from pathlib import Path
 import sys
