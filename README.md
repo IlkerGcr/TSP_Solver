@@ -26,8 +26,10 @@ Traveling Salesman Problem Library." *ORSA Journal on Computing*, 3(4), 1991.
 Reproduce with `python src/experiments/run_tsplib_benchmark.py`.
 
 <p align="center">
-  <img src="data/plots/tsplib_berlin52_aco.png" width="90%" alt="ACO solving TSPLIB berlin52: tour and convergence">
+  <img src="data/plots/tsplib_berlin52_sa_animated.gif" width="49%" alt="Simulated Annealing untangling a random tour on TSPLIB berlin52">
+  <img src="data/plots/tsplib_berlin52_aco_animated.gif" width="49%" alt="Ant Colony Optimization converging on TSPLIB berlin52">
 </p>
+<p align="center"><em>SA (left) starts from a random tour and slowly untangles it; ACO (right) applies 2-opt every iteration so it starts clean and refines quickly — the same quality/speed trade-off as the table above, but watchable.</em></p>
 
 ### Optimality gap on small instances (Held-Karp ground truth)
 
@@ -60,12 +62,13 @@ src/tsp/         core data structures: TSPInstance (coords + distance matrix, JS
 src/solvers/     SA and ACO solver implementations
 src/experiments/ instance generation, parallel grid-search tuning, benchmark runners, plotting
 src/cli.py       `tsp solve` command-line entry point
-app/             Streamlit live demo
+app/             Streamlit live demo (Plotly-animated tour + convergence)
+.streamlit/      dark theme for the demo app
 tests/           pytest suite (unit tests + solver correctness checks)
 data/instances/  pre-generated problem instances (10 to 200 cities) + converted TSPLIB instances
 data/tsplib/     raw TSPLIB .tsp files and their published optimal tour lengths
 data/results/    benchmark run outputs
-data/plots/      tour + convergence visualizations
+data/plots/      tour + convergence visualizations (static PNGs and animated GIFs)
 data/best_params.json   tuned hyperparameters found by grid search
 ```
 
@@ -95,8 +98,11 @@ python src/experiments/run_grid_search.py
 # Validate against TSPLIB benchmark instances
 python src/experiments/run_tsplib_benchmark.py
 
-# Plot a solved tour + its convergence curve
+# Plot a solved tour + its convergence curve (static PNG)
 python src/experiments/plot_solution.py --instance data/instances/tsplib_berlin52.json --algo aco
+
+# Render an animated GIF of the tour untangling over iterations
+python src/experiments/make_tour_animation.py --instance data/instances/tsplib_berlin52.json --algo aco
 
 # Run the test suite
 pytest
@@ -107,7 +113,8 @@ pytest
 **[Try it live →](https://tspsolver-gayumr5rmvih7tkzo5splg.streamlit.app/)**
 
 An interactive Streamlit app lets you pick an instance, run SA or ACO, and
-replay how the solution converged.
+watch the tour actually untangle frame by frame (Plotly animation, synced
+with the convergence curve) — not just a static end result.
 
 **Run locally:**
 ```bash
@@ -129,5 +136,6 @@ streamlit run app/streamlit_app.py
 ## Tech stack
 Core solvers (`src/tsp`, `src/solvers`) and the CLI are pure Python 3 standard
 library (dataclasses, `concurrent.futures`, `argparse`) — no dependencies to
-run the algorithms themselves. `matplotlib` is used for plotting, `pytest`
-for tests, and `streamlit` for the optional live demo.
+run the algorithms themselves. `matplotlib` renders the static/GIF plots,
+`pytest` runs the tests, and `streamlit` + `plotly` power the optional live
+demo's frame-by-frame tour animation.
