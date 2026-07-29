@@ -41,12 +41,16 @@ LABELS = {"aco": "Ant Colony Optimization", "sa": "Simulated Annealing"}
 
 def solve(instance: TSPInstance, algo: str, seed: int):
     if algo == "sa":
+        # Scale the cooling rate to the step budget so the schedule always
+        # finishes annealing (temperature down to ~0.2% of its start) within it.
         max_steps = 300_000
+        iters_per_temp = instance.n * 5
+        num_coolings = max(1, max_steps // iters_per_temp)
         cfg = SAConfig(
             init_accept_prob=0.8,
             uphill_samples=100,
-            cooling_alpha=0.995,
-            iters_per_temp=instance.n * 5,
+            cooling_alpha=0.002 ** (1 / num_coolings),
+            iters_per_temp=iters_per_temp,
             min_temp=1e-12,
             max_steps=max_steps,
             log_interval=max(1, max_steps // TARGET_FRAMES),
