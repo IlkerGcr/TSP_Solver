@@ -113,10 +113,9 @@ streamlit run app/streamlit_app.py
 ```
 
 **Deploy for free on [Streamlit Community Cloud](https://streamlit.io/cloud):**
-1. Push this repo to GitHub (already done if you're reading this on GitHub).
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
-3. "New app" → select this repo/branch → set the main file path to `app/streamlit_app.py`.
-4. Deploy. Streamlit Cloud installs from `requirements.txt` automatically.
+1. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+2. "New app" → select this repo/branch → set the main file path to `app/streamlit_app.py`.
+3. Deploy. Streamlit Cloud installs from `requirements.txt` automatically.
 
 ## Highlights
 - Exact Held–Karp DP solver for verifying optimal solutions on small instances.
