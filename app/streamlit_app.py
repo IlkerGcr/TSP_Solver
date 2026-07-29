@@ -47,11 +47,19 @@ def list_instances():
 
 
 def solve_sa(instance: TSPInstance, seed: int, max_steps: int) -> dict:
+    # Scale the cooling rate to the chosen step budget so the schedule always
+    # finishes annealing (temperature down to ~0.2% of its start) within it.
+    # A fixed rate only anneals fully at one particular budget, leaving the
+    # tour visibly tangled at smaller ones.
+    iters_per_temp = instance.n * 5
+    num_coolings = max(1, max_steps // iters_per_temp)
+    cooling_alpha = 0.002 ** (1 / num_coolings)
+
     cfg = SAConfig(
         init_accept_prob=0.8,
         uphill_samples=100,
-        cooling_alpha=0.995,
-        iters_per_temp=instance.n * 5,
+        cooling_alpha=cooling_alpha,
+        iters_per_temp=iters_per_temp,
         min_temp=1e-12,
         max_steps=max_steps,
         log_interval=max(1, max_steps // TARGET_FRAMES),
@@ -148,11 +156,13 @@ def build_figure(instance: TSPInstance, result: dict, algo: str):
                 go.Scatter(x=[steps[i]], y=[costs[i]]),
             ],
             traces=[1, 2, 3],
-            layout=go.Layout(annotations=[dict(
+            # `title` is a single object, so each frame cleanly replaces it.
+            # `annotations` is a list and Plotly merges rather than replaces
+            # it per frame, which stacks every frame's text on top of the last.
+            layout=go.Layout(title=dict(
                 text=f"cost = {costs[i]:.2f}  (step {step})",
-                x=0.5, y=1.12, xanchor="center", xref="x domain", yref="y domain",
-                showarrow=False, font=dict(color=INK_PRIMARY, size=13),
-            )]),
+                x=0.22, xanchor="center", font=dict(color=INK_PRIMARY, size=16),
+            )),
         ))
     fig.frames = frames
 
@@ -160,15 +170,14 @@ def build_figure(instance: TSPInstance, result: dict, algo: str):
         paper_bgcolor=SURFACE,
         plot_bgcolor=SURFACE,
         font=dict(color=INK_MUTED),
-        margin=dict(t=70, b=60, l=50, r=20),
+        margin=dict(t=90, b=60, l=50, r=20),
         height=520,
-        annotations=[dict(
+        title=dict(
             text=f"cost = {costs[0]:.2f}  (step {steps[0]})",
-            x=0.5, y=1.12, xanchor="center", xref="x domain", yref="y domain",
-            showarrow=False, font=dict(color=INK_PRIMARY, size=13),
-        )],
+            x=0.22, xanchor="center", font=dict(color=INK_PRIMARY, size=16),
+        ),
         updatemenus=[dict(
-            type="buttons", showactive=False, x=0.99, y=1.20, xanchor="right",
+            type="buttons", showactive=False, x=0.99, y=1.28, xanchor="right",
             buttons=[
                 dict(label="▶ Play", method="animate", args=[None, dict(
                     frame=dict(duration=140, redraw=True), fromcurrent=True, transition=dict(duration=0),
