@@ -42,6 +42,11 @@ class SAConfig:
     # Tuning gibi durumlarda "eşit bütçe" için sadece max_steps ile durdur
     use_step_budget_only: bool = False
 
+    # Kapalı: mevcut benchmark/tuning koşularının performansını etkilemez.
+    # Açıkken, history ile aynı noktalarda best_tour anlık görüntüsü de kaydedilir
+    # (görselleştirme/animasyon için).
+    record_tour_history: bool = False
+
 
 def estimate_initial_temp(
     instance: TSPInstance,
@@ -85,6 +90,7 @@ def sa_solve(instance: TSPInstance, cfg: SAConfig) -> Dict[str, Any]:
     T = estimate_initial_temp(instance, tour, cfg, rng)
 
     history: List[Tuple[int, float]] = [(0, best_cost)]
+    tour_history: List[Tuple[int, Tour]] = [(0, best_tour[:])] if cfg.record_tour_history else []
     step = 0
     t_start = perf_counter()
 
@@ -108,6 +114,8 @@ def sa_solve(instance: TSPInstance, cfg: SAConfig) -> Dict[str, Any]:
 
             if step % cfg.log_interval == 0:
                 history.append((step, best_cost))
+                if cfg.record_tour_history:
+                    tour_history.append((step, best_tour[:]))
 
             if step >= cfg.max_steps:
                 break
@@ -118,6 +126,8 @@ def sa_solve(instance: TSPInstance, cfg: SAConfig) -> Dict[str, Any]:
 
     if history[-1][0] != step:
         history.append((step, best_cost))
+        if cfg.record_tour_history:
+            tour_history.append((step, best_tour[:]))
 
     return {
         "best_tour": best_tour,
@@ -125,5 +135,6 @@ def sa_solve(instance: TSPInstance, cfg: SAConfig) -> Dict[str, Any]:
         "steps": step,
         "runtime_sec": t_end - t_start,
         "history": history,
+        "tour_history": tour_history,
         "config": cfg,
     }

@@ -54,6 +54,11 @@ class ACOConfig:
     log_interval: int = 1
     seed: Optional[int] = None
 
+    # Kapalı: mevcut benchmark/tuning koşularının performansını etkilemez.
+    # Açıkken, history ile aynı noktalarda best_tour anlık görüntüsü de kaydedilir
+    # (görselleştirme/animasyon için).
+    record_tour_history: bool = False
+
 
 def build_heuristic(instance: TSPInstance) -> List[List[float]]:
     """
@@ -177,6 +182,7 @@ def aco_solve(instance: TSPInstance, cfg: ACOConfig) -> Dict[str, Any]:
     best_cost = math.inf
 
     history: List[Tuple[int, float]] = []
+    tour_history: List[Tuple[int, Tour]] = []
     t_start = perf_counter()
     last_it = 0
 
@@ -279,6 +285,8 @@ def aco_solve(instance: TSPInstance, cfg: ACOConfig) -> Dict[str, Any]:
         # Kayıt
         if cfg.log_interval > 0 and it % cfg.log_interval == 0:
             history.append((it, best_cost))
+            if cfg.record_tour_history:
+                tour_history.append((it, best_tour[:]))
 
     t_end = perf_counter()
 
@@ -291,11 +299,15 @@ def aco_solve(instance: TSPInstance, cfg: ACOConfig) -> Dict[str, Any]:
     elif history[-1][0] != last_it:
         history.append((last_it, best_cost))
 
+    if cfg.record_tour_history and (not tour_history or tour_history[-1][0] != last_it):
+        tour_history.append((last_it, best_tour[:]))
+
     return {
         "best_tour": best_tour,
         "best_cost": best_cost,
         "iterations_done": last_it,
         "runtime_sec": t_end - t_start,
+        "tour_history": tour_history,
         "history": history,
         "config": cfg,
     }
