@@ -1,4 +1,8 @@
-
+"""
+Validate SA/ACO against TSPLIB instances with externally published optimal
+tour lengths (data/tsplib/known_optima.json), instead of only comparing
+against this project's own randomly generated instances.
+"""
 from __future__ import annotations
 from pathlib import Path
 import sys
