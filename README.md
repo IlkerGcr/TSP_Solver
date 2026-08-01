@@ -139,3 +139,7 @@ library (dataclasses, `concurrent.futures`, `argparse`) — no dependencies to
 run the algorithms themselves. `matplotlib` renders the static/GIF plots,
 `pytest` runs the tests, and `streamlit` + `plotly` power the optional live
 demo's frame-by-frame tour animation.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

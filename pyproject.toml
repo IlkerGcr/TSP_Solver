@@ -8,6 +8,8 @@ version = "0.1.0"
 description = "TSP solver & benchmark suite: exact (Held-Karp/B&B), Simulated Annealing, and Ant Colony Optimization"
 requires-python = ">=3.10"
 readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Ilker Gocer" }]
 
 [project.optional-dependencies]
 dev = ["pytest"]
